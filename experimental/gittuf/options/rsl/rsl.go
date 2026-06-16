@@ -8,6 +8,7 @@ type RecordOptions struct {
 	RemoteName            string
 	LocalOnly             bool
 	SkipCheckForDuplicate bool
+	SigningKeyBytes       []byte
 }
 
 type RecordOption func(o *RecordOptions)
@@ -38,9 +39,20 @@ func WithRecordLocalOnly() RecordOption {
 	}
 }
 
+// WithRecordSigningKeyBytes provides a PEM-encoded private key to sign the RSL
+// entry commit with directly, instead of reading user.signingKey from git
+// config. Intended for embedders (forges) that hold their own signing key and
+// operate on bare repositories with no per-repo git config.
+func WithRecordSigningKeyBytes(pem []byte) RecordOption {
+	return func(o *RecordOptions) {
+		o.SigningKeyBytes = pem
+	}
+}
+
 type AnnotateOptions struct {
-	RemoteName string
-	LocalOnly  bool
+	RemoteName      string
+	LocalOnly       bool
+	SigningKeyBytes []byte
 }
 
 type AnnotateOption func(o *AnnotateOptions)
@@ -54,5 +66,13 @@ func WithAnnotateRemote(remoteName string) AnnotateOption {
 func WithAnnotateLocalOnly() AnnotateOption {
 	return func(o *AnnotateOptions) {
 		o.LocalOnly = true
+	}
+}
+
+// WithAnnotateSigningKeyBytes provides a PEM-encoded private key to sign the
+// annotation commit with directly. See WithRecordSigningKeyBytes.
+func WithAnnotateSigningKeyBytes(pem []byte) AnnotateOption {
+	return func(o *AnnotateOptions) {
+		o.SigningKeyBytes = pem
 	}
 }
