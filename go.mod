@@ -234,3 +234,5 @@ require (
 	k8s.io/klog/v2 v2.140.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
+
+replace github.com/go-git/go-git/v6 => ../go-git-fork
