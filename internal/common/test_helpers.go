@@ -10,7 +10,7 @@ import (
 
 	"github.com/gittuf/gittuf/internal/rsl"
 	"github.com/gittuf/gittuf/pkg/gitinterface"
-	"github.com/go-git/go-git/v5/config"
+	"github.com/go-git/go-git/v6/config"
 	"github.com/jonboulle/clockwork"
 )
 
@@ -20,15 +20,12 @@ const (
 )
 
 var (
-	TestGitConfig = &config.Config{
-		User: struct {
-			Name  string
-			Email string
-		}{
-			Name:  testName,
-			Email: testEmail,
-		},
-	}
+	TestGitConfig = func() *config.Config {
+		c := config.NewConfig()
+		c.User.Name = testName
+		c.User.Email = testEmail
+		return c
+	}()
 	TestClock = clockwork.NewFakeClockAt(time.Date(1995, time.October, 26, 9, 0, 0, 0, time.UTC))
 )
 
